@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.net.URL?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.PerspectiveCamera?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Slider?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?scenebuilder-stylesheet /css/Styles.css?>
+
+<?import javafx.scene.control.PasswordField?>
+<VBox alignment="center" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="client.Controller">
+    <stylesheets><URL value="@/css/Styles.css" /> </stylesheets>
+    <HBox alignment="CENTER" spacing="5.0">
+        <Button fx:id="btnStop" onAction="#stopMusic" text="Stop" />
+        <Button fx:id="btnPause" onAction="#pauseMusic" text="Pause" />
+        <Button fx:id="btnPlay" onAction="#playMusic" text="Play" />
+      <Slider fx:id="volumeSlider" max="1.0" onMousePressed="#sendVolume" onMouseReleased="#sendVolume" showTickMarks="true" value="1.0" />
+      <Label fx:id="currentTime" prefHeight="14.0" prefWidth="38.0" text="00:00" textAlignment="CENTER" />
+      <opaqueInsets>
+         <Insets />
+      </opaqueInsets>
+      <padding>
+         <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+      </padding>
+      <VBox.margin>
+         <Insets bottom="1.0" left="1.0" right="1.0" top="1.0" />
+      </VBox.margin>
+    </HBox>
+
+    <HBox fx:id="upperPanel">
+        <TextField HBox.hgrow="ALWAYS" promptText="Логин" fx:id="loginField"/>
+        <PasswordField promptText="Пароль" fx:id="passwordField" onAction="#tryToAuth"/>
+        <Button text="Авторизоваться" onAction="#tryToAuth"/>
+    </HBox>
+
+    <TextArea fx:id="chatArea" editable="false" VBox.vgrow="ALWAYS" />
+
+    <HBox fx:id="bottomPanel" managed="false" visible="false"  alignment="CENTER" spacing="5.0">
+        <TextField fx:id="msgField" onAction="#sendMsg" promptText="Введите сообщение" HBox.hgrow="ALWAYS">
+         <padding>
+            <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+         </padding></TextField>
+        <Button fx:id="btn1" onAction="#sendMsg" text="Send Msg" />
+        <opaqueInsets>
+            <Insets />
+        </opaqueInsets>
+        <padding>
+            <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+        </padding>
+        <VBox.margin>
+            <Insets bottom="1.0" left="1.0" right="1.0" top="1.0" />
+        </VBox.margin>
+    </HBox>
+   <PerspectiveCamera />
+
+</VBox>

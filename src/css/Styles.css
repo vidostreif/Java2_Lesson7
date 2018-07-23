@@ -1,0 +1,14 @@
+#btn1 {
+    -fx-font: 14px "Serif";
+    -fx-padding: 2px;
+    -fx-background-color: blueviolet;
+    -fx-text-fill: white;
+}
+
+
+#btn1:hover {
+    -fx-font: 14px "Serif";
+    -fx-padding: 2px;
+    -fx-background-color: red;
+    -fx-text-fill: black;
+}
