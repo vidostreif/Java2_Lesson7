@@ -41,11 +41,11 @@
     <TextArea fx:id="chatArea" editable="false" VBox.vgrow="ALWAYS" />
 
     <HBox fx:id="bottomPanel" managed="false" visible="false"  alignment="CENTER" spacing="5.0">
-        <TextField fx:id="msgField" onAction="#sendMsg" promptText="Введите сообщение" HBox.hgrow="ALWAYS">
+        <TextField fx:id="msgField" onAction="#enterMsg" promptText="Введите сообщение" HBox.hgrow="ALWAYS">
          <padding>
             <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
          </padding></TextField>
-        <Button fx:id="btn1" onAction="#sendMsg" text="Send Msg" />
+        <Button fx:id="btn1" onAction="#enterMsg" text="Send Msg" />
         <opaqueInsets>
             <Insets />
         </opaqueInsets>

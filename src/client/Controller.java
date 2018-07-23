@@ -5,33 +5,19 @@ import javafx.scene.control.Label;
 import javafx.scene.control.Slider;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
-
-import javafx.event.ActionEvent;
-import javafx.fxml.FXML;
-import javafx.fxml.Initializable;
 import javafx.scene.control.PasswordField;
-import javafx.scene.control.TextArea;
-import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
-
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
-import java.net.URL;
-import java.util.ResourceBundle;
+
 
 
 import java.util.Timer;
 
 public class Controller {
-
-//    @FXML
-//    TextArea textArea;
-
-//    @FXML
-//    TextField textField;
 
     @FXML
     Slider volumeSlider;
@@ -71,6 +57,8 @@ public class Controller {
         Updater updater = new Updater(this);
         Timer timer = new Timer();
         timer.schedule(updater,0,1000);
+
+        Main.control = this;
     }
 
     public void stopMusic() {
@@ -147,14 +135,22 @@ public class Controller {
         }
     }
 
-    public void sendMsg() {
+    public void sendMsg(String msg) {
         try {
-            out.writeUTF(msgField.getText());
+            out.writeUTF(msg);
             msgField.clear();
             msgField.requestFocus();
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    public void enterMsg() {
+        sendMsg(msgField.getText());
+    }
+
+    public void closeConnect() {
+        sendMsg("/end");
     }
 
     public void tryToAuth() {

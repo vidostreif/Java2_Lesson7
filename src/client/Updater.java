@@ -6,7 +6,7 @@ import java.util.TimerTask;
 
 public class Updater extends TimerTask {
 
-    public Controller contr;
+    private Controller contr;
 
     Updater(Controller contr){
         this.contr = contr;

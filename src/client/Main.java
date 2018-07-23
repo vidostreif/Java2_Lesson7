@@ -9,6 +9,7 @@ import javafx.stage.Stage;
 
 public class Main extends Application {
     public static MyPlayer myMediaPlayer;
+    public static Controller control;
 
     @Override
     public void start(Stage primaryStage) throws Exception {
@@ -21,10 +22,12 @@ public class Main extends Application {
 
         primaryStage.setScene(scene);
         primaryStage.show();
+
     }
 
     @Override
     public void stop() throws Exception {
+        control.closeConnect();
         super.stop();
         Platform.exit();
         System.exit(0);

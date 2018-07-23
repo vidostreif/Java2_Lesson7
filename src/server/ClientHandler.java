@@ -30,6 +30,7 @@ public class ClientHandler {
                                     sendMsg("/authok");
                                     nick = newNick;
                                     server.subscribe(this);
+                                    server.broadcastMsg(nick + " подключился к чату!");
                                     break;
                                 } else {
                                     sendMsg("Учетная запись уже используется");
@@ -43,6 +44,8 @@ public class ClientHandler {
                         String str = in.readUTF();
                         if (str.equals("/end")) {
                             out.writeUTF("/serverclosed");
+                            System.out.println("Client " + nick + " закрыл подключение!");
+                            server.broadcastMsg(nick + " вышел из чата!");
                             break;
                         }
                         //запрос списка комманд
@@ -63,9 +66,9 @@ public class ClientHandler {
                             if (tokens.length == 3) {
                                 ClientHandler targetClient = server.getClient(tokens[1]);
                                 if (targetClient != null) {
-                                    targetClient.sendMsg(nick + ": " + tokens[2]);
+                                    targetClient.sendMsg("Приватное сообщение от " + nick + ": " + tokens[2]);
                                     if (targetClient != this) {
-                                        sendMsg(nick + " для" + targetClient.getNick() + ": " + tokens[2]);
+                                        sendMsg(nick + " для " + targetClient.getNick() + ": " + tokens[2]);
                                     }
                                 } else {
                                     sendMsg("Пользователя с таким ником нет в чате.");
