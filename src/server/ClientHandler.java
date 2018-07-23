@@ -45,7 +45,40 @@ public class ClientHandler {
                             out.writeUTF("/serverclosed");
                             break;
                         }
-                        server.broadcastMsg(nick + ": " + str);
+                        //запрос списка комманд
+                        else if (str.equals("/help")) {
+                            String commands = "Доступные команды:" + "\n" +
+                                    "/end - закрыть подключение" + "\n" +
+                                    "/list - список подключенных клиентов" + "\n" +
+                                    "/w [имя] [сообщение] - сообщение конкретному клиенту " + "\n";
+                            sendMsg(commands);
+                        }
+                        //запрос списка пользователей
+                        else if (str.equals("/list")) {
+                            sendMsg("Список всех авторизованных пользователей:" + "\n" + server.getAllClientsNick());
+                        }
+                        //Отправка сообщения конкретному пользователю
+                        else if (str.startsWith("/w")) {
+                            String[] tokens = str.split(" ", 3);
+                            if (tokens.length == 3) {
+                                ClientHandler targetClient = server.getClient(tokens[1]);
+                                if (targetClient != null) {
+                                    targetClient.sendMsg(nick + ": " + tokens[2]);
+                                    if (targetClient != this) {
+                                        sendMsg(nick + " для" + targetClient.getNick() + ": " + tokens[2]);
+                                    }
+                                } else {
+                                    sendMsg("Пользователя с таким ником нет в чате.");
+                                }
+                            } else if (tokens.length == 2) {
+                                sendMsg("Укажите сообщение для пользователя");
+                            } else if (tokens.length == 1) {
+                                sendMsg("Укажите пользователя");
+                            }
+                        } else {
+                            server.broadcastMsg(nick + ": " + str);
+                        }
+
                         System.out.println("Client: " + str);
                     }
                 } catch (IOException e) {
@@ -85,4 +118,5 @@ public class ClientHandler {
     public String getNick() {
         return nick;
     }
+
 }

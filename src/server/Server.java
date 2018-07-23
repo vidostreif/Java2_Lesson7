@@ -15,7 +15,7 @@ public class Server {
         Socket socket = null;
         try {
             AuthService.connect();
-            server = new ServerSocket(8189);
+            server = new ServerSocket(16586);
             System.out.println("Сервер запущен. Ожидаем клиентов...");
             while (true) {
                 socket = server.accept();
@@ -60,5 +60,25 @@ public class Server {
 
     public void unsubscribe(ClientHandler client) {
         clients.remove(client);
+    }
+
+    public ClientHandler getClient(String nick) {
+        for (ClientHandler client : clients) {
+            if (client.getNick().equals(nick)) {
+                return client;
+            }
+        }
+
+        return null;
+    }
+
+    public String getAllClientsNick() {
+        StringBuffer clientsNick = new StringBuffer();
+
+        for (ClientHandler client : clients) {
+            clientsNick.append(client.getNick() + "\n");
+        }
+
+        return clientsNick.toString();
     }
 }

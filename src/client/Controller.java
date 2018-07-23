@@ -62,7 +62,7 @@ public class Controller {
     DataOutputStream out;
 
     final String IP_ADDRESS = "localhost";
-    final int PORT = 8189;
+    final int PORT = 16586;
 
     private boolean isAuthorized;
 
