@@ -99,10 +99,11 @@ public class Controller {
 
     public void connect() {
         try {
+            setAuthorized(false);
             socket = new Socket(IP_ADDRESS, PORT);
             in = new DataInputStream(socket.getInputStream());
             out = new DataOutputStream(socket.getOutputStream());
-            setAuthorized(false);
+
             new Thread(() -> {
                 try {
                     while (true) {
@@ -116,11 +117,12 @@ public class Controller {
                     }
                     while (true) {
                         String str = in.readUTF();
-                        if (str.equals("/serverclosed")) break;
                         chatArea.appendText(str + "\n");
+                        if (str.equals("/serverclosed")) break;
                     }
                 } catch (IOException e) {
                     e.printStackTrace();
+                    chatArea.appendText("Сервер разорвал соединение!" + "\n");
                 } finally {
                     try {
                         socket.close();
@@ -132,21 +134,30 @@ public class Controller {
             }).start();
         } catch (IOException e) {
             e.printStackTrace();
+            socket = null;
+            in = null;
+            out = null;
+            chatArea.appendText("Не удалось установить соединение с сервером." + "\n");
         }
     }
 
-    public void sendMsg(String msg) {
+    public boolean sendMsg(String msg) {
         try {
             out.writeUTF(msg);
-            msgField.clear();
-            msgField.requestFocus();
+            return true;
         } catch (IOException e) {
             e.printStackTrace();
+            chatArea.appendText("Исходящий поток не доступен!" + "\n");
+        } finally {
+            return false;
         }
     }
 
     public void enterMsg() {
-        sendMsg(msgField.getText());
+        if (sendMsg(msgField.getText())) {
+            msgField.clear();
+            msgField.requestFocus();
+        }
     }
 
     public void closeConnect() {
@@ -157,12 +168,10 @@ public class Controller {
         if (socket == null || socket.isClosed()) {
             connect();
         }
-        try {
-            out.writeUTF("/auth " + loginField.getText() + " " + passwordField.getText());
+
+        if (sendMsg("/auth " + loginField.getText() + " " + passwordField.getText())) {
             loginField.clear();
             passwordField.clear();
-        } catch (IOException e) {
-            e.printStackTrace();
         }
     }
 }

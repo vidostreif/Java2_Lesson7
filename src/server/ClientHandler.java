@@ -24,22 +24,26 @@ public class ClientHandler {
                         String str = in.readUTF();
                         if (str.startsWith("/auth")) { // /auth login1 pass1 и так далее
                             String[] tokens = str.split(" ");
-                            String newNick = AuthService.getNickByLoginAndPass(tokens[1], tokens[2]);
-                            if (newNick != null) {
-                                if(!server.isNickBusy(newNick)) {
-                                    sendMsg("/authok");
-                                    nick = newNick;
-                                    server.subscribe(this);
-                                    server.broadcastMsg(nick + " подключился к чату!");
-                                    break;
+                            if (tokens.length == 3) {
+                                String newNick = AuthService.getNickByLoginAndPass(tokens[1], tokens[2]);
+                                if (newNick != null) {
+                                    if (!server.isNickBusy(newNick)) {
+                                        sendMsg("/authok");
+                                        nick = newNick;
+                                        server.subscribe(this);
+                                        server.broadcastMsg(nick + " подключился к чату!");
+                                        System.out.println("Client " + nick + " подключился к чату!");
+                                        break;
+                                    } else {
+                                        sendMsg("Учетная запись уже используется");
+                                    }
                                 } else {
-                                    sendMsg("Учетная запись уже используется");
+                                    sendMsg("Неверный логин/пароль");
                                 }
-                            } else {
-                                sendMsg("Неверный логин/пароль");
-                            }
+                            } else {sendMsg("Вы не ввели логин/пароль");}
                         }
                     }
+
                     while (true) {
                         String str = in.readUTF();
                         System.out.println("Client: " + str);
@@ -49,6 +53,7 @@ public class ClientHandler {
                             out.writeUTF("/serverclosed");
                             System.out.println("Client " + nick + " закрыл подключение!");
                             server.broadcastMsg(nick + " вышел из чата!");
+                            break;
                         }
                         //запрос списка комманд
                         else if (str.equals("/help")) {
