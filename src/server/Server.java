@@ -3,18 +3,22 @@ package server;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.sql.SQLException;
 import java.util.Vector;
 
 
 public class Server {
     private Vector<ClientHandler> clients;
 
-    public Server() {
+    public Server() throws SQLException {
         clients = new Vector<>();
         ServerSocket server = null;
         Socket socket = null;
         try {
             AuthService.connect();
+                        AuthService.addUser("admin", "admin", "admin", true);
+//                        AuthService.addUser("login2", "pass2", "nick2");
+//                        AuthService.addUser("login3", "pass3", "nick3");
             server = new ServerSocket(16586);
             System.out.println("Сервер запущен. Ожидаем клиентов...");
             while (true) {
@@ -39,14 +43,19 @@ public class Server {
         }
     }
 
-    public void broadcastMsg(String msg) {
+    public void broadcastMsg(ClientHandler from, String msg) {
         for (ClientHandler o : clients) {
-            o.sendMsg(msg);
+            if(AuthService.checkBlacklist(from.getNick(), o.getNick())) {
+                o.sendMsg(msg);
+            }
         }
     }
 
     public void subscribe(ClientHandler client) {
         clients.add(client);
+        broadcastMsg(client, client.getNick() + " подключился к чату!");
+        broadcastClientList();
+        System.out.println("Client " + client.getNick() + " подключился к чату!");
     }
 
     public boolean isNickBusy(String nick) {
@@ -60,6 +69,21 @@ public class Server {
 
     public void unsubscribe(ClientHandler client) {
         clients.remove(client);
+        broadcastMsg(client, client.getNick() + " вышел из чата!");
+        broadcastClientList();
+        System.out.println("Client " + client.getNick() + " закрыл подключение!");
+    }
+
+    public void broadcastClientList() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("/clientlist ");
+        for (ClientHandler o: clients) {
+            sb.append(o.getNick() + " ");
+        }
+        String out = sb.toString();
+        for(ClientHandler o: clients) {
+            o.sendMsg(out);
+        }
     }
 
     public ClientHandler getClient(String nick) {
@@ -75,8 +99,9 @@ public class Server {
     public String getAllClientsNick() {
         StringBuffer clientsNick = new StringBuffer();
 
+        clientsNick.append("/clientlist");
         for (ClientHandler client : clients) {
-            clientsNick.append(client.getNick() + "\n");
+            clientsNick.append(" " + client.getNick());
         }
 
         return clientsNick.toString();

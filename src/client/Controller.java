@@ -1,11 +1,8 @@
 package client;
 
+import javafx.application.Platform;
 import javafx.fxml.FXML;
-import javafx.scene.control.Label;
-import javafx.scene.control.Slider;
-import javafx.scene.control.TextArea;
-import javafx.scene.control.TextField;
-import javafx.scene.control.PasswordField;
+import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
 
 import java.io.DataInputStream;
@@ -42,6 +39,9 @@ public class Controller {
 
     @FXML
     PasswordField passwordField;
+
+    @FXML
+    ListView clientList;
 
     Socket socket;
     DataInputStream in;
@@ -81,19 +81,22 @@ public class Controller {
         currentTime.setText(Main.myMediaPlayer.getTime());
     }
 
-
     public void setAuthorized(boolean isAuthorized) {
         this.isAuthorized = isAuthorized;
-        if (!isAuthorized) {
+        if(!isAuthorized) {
             upperPanel.setVisible(true);
             upperPanel.setManaged(true);
             bottomPanel.setVisible(false);
             bottomPanel.setManaged(false);
+            clientList.setManaged(false);
+            clientList.setVisible(false);
         } else {
             upperPanel.setVisible(false);
             upperPanel.setManaged(false);
             bottomPanel.setVisible(true);
             bottomPanel.setManaged(true);
+            clientList.setManaged(true);
+            clientList.setVisible(true);
         }
     }
 
@@ -115,10 +118,26 @@ public class Controller {
                             chatArea.appendText(str + "\n");
                         }
                     }
+                    getHistory();
+
                     while (true) {
                         String str = in.readUTF();
-                        chatArea.appendText(str + "\n");
                         if (str.equals("/serverclosed")) break;
+                        if (str.startsWith("/clientlist")) {
+                            String[] tokens = str.split(" ");
+                            Platform.runLater(new Runnable() {
+                                @Override
+                                public void run() {
+                                    clientList.getItems().clear();
+                                    for (int i = 1; i < tokens.length; i++) {
+                                        clientList.getItems().add(tokens[i]);
+                                    }
+                                }
+                            });
+                        } else {
+                            chatArea.appendText(str + "\n");
+                        }
+
                     }
                 } catch (IOException e) {
                     e.printStackTrace();
@@ -148,7 +167,6 @@ public class Controller {
         } catch (IOException e) {
             e.printStackTrace();
             chatArea.appendText("Исходящий поток не доступен!" + "\n");
-        } finally {
             return false;
         }
     }
@@ -172,6 +190,14 @@ public class Controller {
         if (sendMsg("/auth " + loginField.getText() + " " + passwordField.getText())) {
             loginField.clear();
             passwordField.clear();
+        }
+    }
+
+    public void getHistory() {
+        try {
+            out.writeUTF("/history ");
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 }

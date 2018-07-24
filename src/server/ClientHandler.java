@@ -31,8 +31,9 @@ public class ClientHandler {
                                         sendMsg("/authok");
                                         nick = newNick;
                                         server.subscribe(this);
-                                        server.broadcastMsg(nick + " подключился к чату!");
-                                        System.out.println("Client " + nick + " подключился к чату!");
+//                                        server.broadcastMsg(nick + " подключился к чату!");
+                                        sendMsg("Вы можете ввести /help что бы узнать все доступные команды.");
+//                                        System.out.println("Client " + nick + " подключился к чату!");
                                         break;
                                     } else {
                                         sendMsg("Учетная запись уже используется");
@@ -51,8 +52,8 @@ public class ClientHandler {
                         //Отключение
                         if (str.equals("/end")) {
                             out.writeUTF("/serverclosed");
-                            System.out.println("Client " + nick + " закрыл подключение!");
-                            server.broadcastMsg(nick + " вышел из чата!");
+//                            System.out.println("Client " + nick + " закрыл подключение!");
+//                            server.broadcastMsg(nick + " вышел из чата!");
                             break;
                         }
                         //запрос списка комманд
@@ -62,6 +63,21 @@ public class ClientHandler {
                                     "/list - список подключенных клиентов" + "\n" +
                                     "/w [имя] [сообщение] - сообщение конкретному клиенту " + "\n";
                             sendMsg(commands);
+                        }
+                        //Добавление пользователя в черный список
+                        if (str.startsWith("/blacklist")) {
+                            String[] tokens = str.split(" ", 2);
+                            if (tokens.length == 2) {
+                                AuthService.addBlacklist(nick, tokens[1]);
+                                sendMsg("Вы добавили пользователя " + tokens[1] + " в черный список");
+                            } else  if (tokens.length == 2) {
+                                sendMsg("Укажите, кого вы хотите добавить в черный список");
+                            }
+                        }
+                        //История сообщений
+                        if (str.startsWith("/history ")) {
+                            StringBuilder stringBuilder = AuthService.getHistoryChat();
+                            out.writeUTF(stringBuilder.toString());
                         }
                         //запрос списка пользователей
                         else if (str.equals("/list")) {
@@ -86,7 +102,8 @@ public class ClientHandler {
                                 sendMsg("Укажите пользователя");
                             }
                         } else {
-                            server.broadcastMsg(nick + ": " + str);
+                            AuthService.saveHistory(nick, str);
+                            server.broadcastMsg(this,nick + ": " + str);
                         }
                     }
                 } catch (IOException e) {
@@ -122,6 +139,10 @@ public class ClientHandler {
             e.printStackTrace();
         }
     }
+
+//    public boolean checkBlackList(String nick) {
+//        return blacklist.contains(nick);
+//    }
 
     public String getNick() {
         return nick;
