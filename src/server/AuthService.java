@@ -1,5 +1,6 @@
 package server;
 
+import java.util.Date;
 import java.sql.*;
 
 public class AuthService {
@@ -19,20 +20,6 @@ public class AuthService {
     public static void disconnect() {
         try {
             connection.close();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
-
-    public static void addUser(String login, String pass, String nick, Boolean admin) {
-        try {
-            String query = "INSERT INTO main (login, password, nickname, admin) VALUES (?, ?, ?, ?)";
-            PreparedStatement ps = connection.prepareStatement(query);
-            ps.setString(1, login);
-            ps.setInt(2, pass.hashCode());
-            ps.setString(3, nick);
-            ps.setBoolean(4, admin);
-            ps.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -116,8 +103,97 @@ public class AuthService {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-
         return true;
     }
 
+    public static boolean checkBan(String nick) {
+
+        //проверяем бан лист
+        String sql = String.format("SELECT endTime FROM banlist\n" +
+                "WHERE nickname = '%s'\n", nick);
+        try {
+            ResultSet rs = stmt.executeQuery(sql);
+            while (rs.next()) {
+                Date date = new Date();
+                if (!date.after(rs.getTimestamp(1))) {
+                    return true;
+                }else {
+                    delBan(nick);
+                    return false;
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return false;
+    }
+
+    //админские дела
+    private static void delBan(String nick) {
+
+            try {
+                String query = String.format("DELETE FROM banlist\n" +
+                        "      WHERE nickname = '%s'", nick);
+                Statement st = connection.createStatement();
+                st.executeUpdate(query);
+
+                System.out.println(nick + " разблокирован.");
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+    }
+
+    public static String addBan(String nickAdmin, String nickUser, long time) {
+        if (checkThatAdmin(nickAdmin)) {
+
+            Date date = new Date();
+            date.setTime(date.getTime() + time*60000);
+
+            try {
+                String query = "INSERT INTO banlist (nickname, endTime) VALUES (?, ?)";
+                PreparedStatement ps = connection.prepareStatement(query);
+                ps.setString(1, nickUser);
+                ps.setTimestamp(2, new java.sql.Timestamp(date.getTime()));
+                ps.executeUpdate();
+                System.out.println("Время бана" + date.toString());
+                return "Пользователь добавлен в бан до" + date.toString();
+            } catch (SQLException e) {
+                e.printStackTrace();
+                return "Какие-то проблемы с базой данных";
+            }
+        } else {return "У вас нет прав администратора";}
+    }
+
+    public static String addUser(String nickAdmin, String login, String pass, String nick, Boolean admin) {
+        if (checkThatAdmin(nickAdmin)) {
+            try {
+                String query = "INSERT INTO main (login, password, nickname, admin) VALUES (?, ?, ?, ?)";
+                PreparedStatement ps = connection.prepareStatement(query);
+                ps.setString(1, login);
+                ps.setInt(2, pass.hashCode());
+                ps.setString(3, nick);
+                ps.setBoolean(4, admin);
+                ps.executeUpdate();
+                return "Пользователь добавлен в базу данных";
+            } catch (SQLException e) {
+                e.printStackTrace();
+                return "Какие-то проблемы с базой данных";
+            }
+        } else {return "У вас нет прав администратора";}
+    }
+
+    private static boolean checkThatAdmin(String nick) {
+        String sql = String.format("SELECT admin FROM main\n" +
+                "WHERE nickname = '%s'\n", nick);
+        try {
+            ResultSet rs = stmt.executeQuery(sql);
+            if (rs.next()) {
+                return rs.getBoolean(1);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
 }

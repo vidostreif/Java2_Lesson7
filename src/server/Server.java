@@ -16,9 +16,6 @@ public class Server {
         Socket socket = null;
         try {
             AuthService.connect();
-                        AuthService.addUser("admin", "admin", "admin", true);
-//                        AuthService.addUser("login2", "pass2", "nick2");
-//                        AuthService.addUser("login3", "pass3", "nick3");
             server = new ServerSocket(16586);
             System.out.println("Сервер запущен. Ожидаем клиентов...");
             while (true) {
@@ -92,7 +89,6 @@ public class Server {
                 return client;
             }
         }
-
         return null;
     }
 
@@ -103,7 +99,6 @@ public class Server {
         for (ClientHandler client : clients) {
             clientsNick.append(" " + client.getNick());
         }
-
         return clientsNick.toString();
     }
 }
