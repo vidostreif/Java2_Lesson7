@@ -6,7 +6,6 @@ import java.net.Socket;
 import java.sql.SQLException;
 import java.util.Vector;
 
-
 public class Server {
     private Vector<ClientHandler> clients;
 
@@ -71,7 +70,7 @@ public class Server {
         System.out.println("Client " + client.getNick() + " закрыл подключение!");
     }
 
-    public void broadcastClientList() {
+    private void broadcastClientList() {
         StringBuilder sb = new StringBuilder();
         sb.append("/clientlist ");
         for (ClientHandler o: clients) {
