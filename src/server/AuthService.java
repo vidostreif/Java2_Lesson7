@@ -136,6 +136,27 @@ public class AuthService {
         return true;
     }
 
+    public static String delFromBlacklist(String nickWho, String nickWhom) {
+
+        //проверяем добавили ли мы его в черный список
+        String sql = String.format("SELECT loginWhom FROM blacklist\n" +
+                "WHERE loginWho = '%s' AND loginWhom = '%s'\n", nickWho, nickWhom);
+        try {
+            ResultSet rs = stmt.executeQuery(sql);
+            if (rs.next()) {
+                String query = String.format("DELETE FROM blacklist\n" +
+                        "WHERE loginWho = '%s' AND loginWhom = '%s'\n", nickWho, nickWhom);
+                Statement st = connection.createStatement();
+                st.executeUpdate(query);
+
+                return (nickWhom + " удален из черного списка.");
+            } else {return (nickWhom + " отсутствует в вашем черном списке.");}
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return "Кикие-то проблемы с базой данных";
+        }
+    }
+
     public static boolean checkBan(String nick) {
 
         //проверяем бан лист
@@ -217,7 +238,7 @@ public class AuthService {
         }
     }
 
-    private static boolean checkThatAdmin(String nick) {
+    public static boolean checkThatAdmin(String nick) {
         String sql = String.format("SELECT admin FROM main\n" +
                 "WHERE nickname = '%s'\n", nick);
         try {

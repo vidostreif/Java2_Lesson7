@@ -71,6 +71,8 @@ public class ClientHandler {
                                 slashHelp();
                             } else if (str.startsWith("/blacklist")) {
                                 slashBlacklist(str);
+                            } else if (str.startsWith("/delblacklist")) {
+                                slashDelFromBL(str);
                             } else if (str.startsWith("/history")) {
                                 slashHistory();
                             } else if (str.equals("/list")) {
@@ -148,11 +150,20 @@ public class ClientHandler {
         //запрос списка комманд
         String commands = "Доступные команды:" + "\n" +
                 "/end - закрыть подключение" + "\n" +
-                "/list - список подключенных клиентов" + "\n" +
                 "/w [имя] [сообщение] - сообщение конкретному клиенту" + "\n" +
                 "/blacklist [имя] - добавление клиента в ваш черный список" + "\n" +
-                "/history - запросить историю сообщений" + "\n";
+                "/delblacklist [имя] - удаление клиента из вашего черного списка" + "\n";
         sendMsg(commands);
+
+        if (AuthService.checkThatAdmin(nick)) {
+            // доплнительный запрос списка комманд для админа
+            commands = "Доступные команды для администратора:" + "\n" +
+                    "/list - список подключенных клиентов" + "\n" +
+                    "/ban [имя] [количество минут] - бан пользователя на определенное количество времени" + "\n" +
+                    "/adduser [login] [password] [nick] [true - если администратор, false - если нет] - добавление пользователя" + "\n" +
+                    "/history - запросить историю сообщений" + "\n";
+            sendMsg(commands);
+        }
     }
 
     private void slashBlacklist(String msg) {
@@ -162,6 +173,16 @@ public class ClientHandler {
             sendMsg(AuthService.addBlacklist(nick, tokens[1]));
         } else if (tokens.length == 1) {
             sendMsg("Укажите, кого вы хотите добавить в черный список");
+        }
+    }
+
+    private void slashDelFromBL(String msg) {
+        //удаление пользователя из черный списка
+        String[] tokens = msg.split(" ", 2);
+        if (tokens.length == 2) {
+            sendMsg(AuthService.delFromBlacklist(nick, tokens[1]));
+        } else if (tokens.length == 1) {
+            sendMsg("Укажите, кого вы хотите удалить из черного списка");
         }
     }
 
@@ -182,12 +203,14 @@ public class ClientHandler {
         if (tokens.length == 3) {
             ClientHandler targetClient = server.getClient(tokens[1]);
             if (targetClient != null) {
-                if(AuthService.checkBlacklist(this.nick, targetClient.nick)) {
+                if (AuthService.checkBlacklist(this.nick, targetClient.nick)) {
                     targetClient.sendMsg("Приватное сообщение от " + nick + ": " + tokens[2]);
                     if (targetClient != this) {
                         sendMsg(nick + " для " + targetClient.getNick() + ": " + tokens[2]);
                     }
-                }else {sendMsg("Вы не можете отправлять сообщения этому пользователю!");}
+                } else {
+                    sendMsg("Вы не можете отправлять сообщения этому пользователю!");
+                }
             } else {
                 sendMsg("Пользователя с таким ником нет в чате.");
             }
