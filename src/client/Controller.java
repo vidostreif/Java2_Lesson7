@@ -52,6 +52,10 @@ public class Controller {
 
     private boolean isAuthorized;
 
+    public boolean isAuthorized() {
+        return isAuthorized;
+    }
+
     @FXML
     public void initialize() {
         Updater updater = new Updater(this);
@@ -113,6 +117,7 @@ public class Controller {
                         String str = in.readUTF();
                         if (str.startsWith("/authok")) {
                             setAuthorized(true);
+                            chatArea.clear();
                             break;
                         } else {
                             chatArea.appendText(str + "\n");

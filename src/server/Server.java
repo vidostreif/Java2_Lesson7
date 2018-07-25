@@ -51,7 +51,7 @@ public class Server {
         clients.add(client);
         broadcastMsg(client, client.getNick() + " подключился к чату!");
         broadcastClientList();
-        System.out.println("Client " + client.getNick() + " подключился к чату!");
+        System.out.println("Client " + client.getNick() + " авторизовался и подключился к чату!");
     }
 
     public boolean isNickBusy(String nick) {

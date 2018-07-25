@@ -27,7 +27,9 @@ public class Main extends Application {
 
     @Override
     public void stop() throws Exception {
-        control.closeConnect();
+        if (control.isAuthorized()) {
+            control.closeConnect();
+        }
         super.stop();
         Platform.exit();
         System.exit(0);

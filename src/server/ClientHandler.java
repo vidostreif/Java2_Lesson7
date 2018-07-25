@@ -4,6 +4,7 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
+import java.util.Timer;
 
 import static jdk.nashorn.internal.runtime.JSType.isNumber;
 
@@ -20,23 +21,48 @@ public class ClientHandler {
             this.server = server;
             this.in = new DataInputStream(socket.getInputStream());
             this.out = new DataOutputStream(socket.getOutputStream());
+
+
             new Thread(() -> {
-                try {
-                    while (true) {
-                        String str = in.readUTF();
-                        if (str.startsWith("/auth")) {
-                            if (slashAuth(str)) {
-                                break;
-                            }
-                        }
+                String str;
+                boolean authorized = false;
+                long timeLastMsg = System.currentTimeMillis();
+                InactivityHandler inactivityHandler = new InactivityHandler(timeLastMsg, this);
+                inactivityHandler.setDaemon(true);
+
+                while (true) {
+                    try {
+                        str = in.readUTF();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                        break;
                     }
 
+                    if (str.startsWith("/auth")) {
+                        if (slashAuth(str)) {
+                            authorized = true;
+                            inactivityHandler.finTimeLastMsg = System.currentTimeMillis();
+                            inactivityHandler.start();
+                            break;
+                        }
+                    }
+                }
+
+                //если авторизовался, то слушаем дальше
+                if (authorized) {
                     while (true) {
-                        String str = in.readUTF();
-                        System.out.println("Client: " + str);
+                        try {
+                            str = in.readUTF();
+                        } catch (IOException e) {
+                            break;
+                        }
+
+                        inactivityHandler.finTimeLastMsg = System.currentTimeMillis();
+                        System.out.println("Client " + nick + " пишет: " + str);
+
                         //Отключение
                         if (str.equals("/end")) {
-                            out.writeUTF("/serverclosed");
+                            sendMsg("/serverclosed");
                             break;
                         }
 
@@ -45,7 +71,7 @@ public class ClientHandler {
                                 slashHelp();
                             } else if (str.startsWith("/blacklist")) {
                                 slashBlacklist(str);
-                            } else if (str.startsWith("/history ")) {
+                            } else if (str.startsWith("/history")) {
                                 slashHistory();
                             } else if (str.equals("/list")) {
                                 slashList();
@@ -53,6 +79,8 @@ public class ClientHandler {
                                 slashW(str);
                             } else if (str.startsWith("/ban")) {
                                 slashBan(str);
+                            } else if (str.startsWith("/adduser")) {
+                                slashAddUser(str);
                             } else {
                                 AuthService.saveHistory(nick, str);
                                 server.broadcastMsg(this, nick + ": " + str);
@@ -61,30 +89,33 @@ public class ClientHandler {
                             sendMsg("Вы забанены!");
                         }
                     }
-                } catch (IOException e) {
-                    e.printStackTrace();
-                } finally {
-                    try {
-                        in.close();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                    try {
-                        out.close();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                    try {
-                        socket.close();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                    server.unsubscribe(this);
                 }
+                inactivityHandler.setDestroy(true);
+                exitFromServer();
+
             }).start();
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    public void exitFromServer() {
+        try {
+            in.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        try {
+            out.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        try {
+            socket.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        server.unsubscribe(this);
     }
 
     private boolean slashAuth(String msg) {
@@ -118,7 +149,9 @@ public class ClientHandler {
         String commands = "Доступные команды:" + "\n" +
                 "/end - закрыть подключение" + "\n" +
                 "/list - список подключенных клиентов" + "\n" +
-                "/w [имя] [сообщение] - сообщение конкретному клиенту " + "\n";
+                "/w [имя] [сообщение] - сообщение конкретному клиенту" + "\n" +
+                "/blacklist [имя] - добавление клиента в ваш черный список" + "\n" +
+                "/history - запросить историю сообщений" + "\n";
         sendMsg(commands);
     }
 
@@ -173,6 +206,16 @@ public class ClientHandler {
             sendMsg(AuthService.addBan(nick, tokens[1], 5));
         } else if (tokens.length == 1) {
             sendMsg("Укажите, кого вы хотите добавить в бан");
+        }
+    }
+
+    private void slashAddUser(String msg) {
+        //Добавление пользователя в базу
+        String[] tokens = msg.split(" ", 5);
+        if (tokens.length == 5) {
+            sendMsg(AuthService.addUser(nick, tokens[1], tokens[2], tokens[3], Boolean.parseBoolean(tokens[2])));
+        } else {
+            sendMsg("Пользователь добавляется в таком формате: /adduser [login] [password] [nick] [true - если администратор, false - если нет]");
         }
     }
 
