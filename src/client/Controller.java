@@ -4,6 +4,7 @@ import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
+import javafx.scene.paint.Color;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
@@ -25,8 +26,11 @@ public class Controller {
     @FXML
     TextField msgField;
 
+//    @FXML
+//    TextArea chatArea;
+
     @FXML
-    TextArea chatArea;
+    ListView chatArea;
 
     @FXML
     HBox bottomPanel;
@@ -63,6 +67,20 @@ public class Controller {
         timer.schedule(updater,0,1000);
 
         Main.control = this;
+
+        chatArea.setCellFactory(lv -> new ListCell<ColoredText>() {
+            @Override
+            protected void updateItem(ColoredText item, boolean empty) {
+                super.updateItem(item, empty);
+                if (item == null) {
+                    setText(null);
+                    setTextFill(null);
+                } else {
+                    setText(item.getText());
+                    setTextFill(item.getColor());
+                }
+            }
+        });
     }
 
     public void stopMusic() {
@@ -126,10 +144,14 @@ public class Controller {
                         String str = in.readUTF();
                         if (str.startsWith("/authok")) {
                             setAuthorized(true);
-                            chatArea.clear();
+//                            chatArea.clear();
+                            chatArea.getItems().clear();
                             break;
                         } else {
-                            chatArea.appendText(str + "\n");
+//                            chatArea.appendText(str + "\n");
+//                            chatArea.getItems().add(str + "\n");
+                            chatArea.getItems().add(new ColoredText(str + "\n", Color.OLIVE));
+
                         }
                     }
                     getHistory();
@@ -149,13 +171,16 @@ public class Controller {
                                 }
                             });
                         } else {
-                            chatArea.appendText(str + "\n");
+//                            chatArea.appendText(str + "\n");
+//                            chatArea.getItems().add(str + "\n");
+                            chatArea.getItems().add(new ColoredText(str + "\n", Color.OLIVE));
                         }
 
                     }
                 } catch (IOException e) {
                     e.printStackTrace();
-                    chatArea.appendText("Сервер разорвал соединение!" + "\n");
+//                    chatArea.appendText("Сервер разорвал соединение!" + "\n");
+                    chatArea.getItems().add("Сервер разорвал соединение!" + "\n");
                 } finally {
                     try {
                         socket.close();
@@ -170,7 +195,8 @@ public class Controller {
             socket = null;
             in = null;
             out = null;
-            chatArea.appendText("Не удалось установить соединение с сервером." + "\n");
+//            chatArea.appendText("Не удалось установить соединение с сервером." + "\n");
+            chatArea.getItems().add("Не удалось установить соединение с сервером." + "\n");
         }
     }
 
@@ -180,7 +206,8 @@ public class Controller {
             return true;
         } catch (IOException e) {
             e.printStackTrace();
-            chatArea.appendText("Исходящий поток не доступен!" + "\n");
+//            chatArea.appendText("Исходящий поток не доступен!" + "\n");
+            chatArea.getItems().add("Исходящий поток не доступен!" + "\n");
             return false;
         }
     }

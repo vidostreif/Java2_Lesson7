@@ -59,7 +59,8 @@
     <!--</HBox>-->
     <HBox>
         <VBox HBox.hgrow="ALWAYS">
-            <TextArea fx:id="chatArea" editable="false" wrapText="true" VBox.vgrow="ALWAYS" />
+            <!--<TextArea fx:id="chatArea2" editable="false" wrapText="true" VBox.vgrow="ALWAYS" />-->
+         <ListView fx:id="chatArea" editable="false" VBox.vgrow="ALWAYS" />
             <HBox fx:id="bottomPanel" alignment="CENTER" managed="false" spacing="5.0" visible="false">
                 <TextField fx:id="msgField" onAction="#enterMsg" promptText="Введите сообщение..." HBox.hgrow="ALWAYS" />
                 <Button onAction="#enterMsg" text="Отправить" />
