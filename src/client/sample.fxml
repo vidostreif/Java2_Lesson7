@@ -65,7 +65,7 @@
                 <Button onAction="#enterMsg" text="Отправить" />
             </HBox>
         </VBox>
-        <ListView fx:id="clientList" managed="false" visible="false" />
+        <ListView fx:id="clientList" managed="false" onMouseClicked="#selecFromList" visible="false" />
     </HBox>
 
 </VBox>

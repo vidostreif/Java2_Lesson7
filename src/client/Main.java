@@ -22,7 +22,7 @@ public class Main extends Application {
         Parent root = FXMLLoader.load(getClass().getResource("sample.fxml"));
         primaryStage.setTitle("Chat and music!");
 
-        Scene scene = new Scene(root, 350, 300);
+        Scene scene = new Scene(root, 450, 450);
 
         myMediaPlayer = new MyPlayer();
 

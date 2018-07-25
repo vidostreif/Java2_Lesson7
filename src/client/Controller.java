@@ -11,7 +11,7 @@ import java.io.IOException;
 import java.net.Socket;
 
 
-
+import java.util.ArrayList;
 import java.util.Timer;
 
 public class Controller {
@@ -83,6 +83,15 @@ public class Controller {
 
     public void updateTime() {
         currentTime.setText(Main.myMediaPlayer.getTime());
+    }
+
+    public void selecFromList(){
+        if (clientList.getSelectionModel().getSelectedItem()!= null) {
+            String selItem = clientList.getSelectionModel().getSelectedItem().toString();
+            msgField.clear();
+            msgField.requestFocus();
+            msgField.appendText("/w " + selItem + " ");
+        }
     }
 
     public void setAuthorized(boolean isAuthorized) {
