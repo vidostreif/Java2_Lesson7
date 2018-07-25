@@ -34,7 +34,7 @@ public class AuthService {
             if (rs.next()) {
                 String nick = rs.getString(1);
                 int dbHash = rs.getInt(2);
-                if(myHash == dbHash) {
+                if (myHash == dbHash) {
                     return nick;
                 }
             }
@@ -56,9 +56,32 @@ public class AuthService {
 
     public static StringBuilder getHistoryChat() {
         StringBuilder stringBuilder = new StringBuilder();
-        String sql = String.format("SELECT nick, post from history ORDER BY ID");
+        //запрашиваем последние 50 записей из истории сообщений
+        int lasRecord = 50;
+
         try {
+            //создаем временную таблицу если она отсутствует
+            String sql = "create TEMP table if not exists tempT (\n" +
+                    "id int,\n" +
+                    "nick TEXT,\n" +
+                    "post TEXT,\n" +
+                    "PRIMARY KEY(id));";
+            stmt.execute(sql);
+
+            //очищаем временную таблицу
+            sql = "DELETE FROM tempT;";
+            stmt.execute(sql);
+
+            //копируем во временную таблиуц последние записи
+            sql = String.format("INSERT INTO tempT (id, nick, post)\n" +
+                    "SELECT id, nick, post\n" +
+                    "FROM history ORDER BY ID DESC LIMIT 0,'%s';", lasRecord);
+            stmt.execute(sql);
+
+            //запрашиваем все данные из временной таблицы с правильной сортировкой
+            sql = "SELECT id, nick, post FROM tempT ORDER BY ID;";
             ResultSet rs = stmt.executeQuery(sql);
+
             while (rs.next()) {
                 stringBuilder.append(rs.getString("nick") + " " + rs.getString("post") + "\n");
             }
@@ -68,14 +91,21 @@ public class AuthService {
         return stringBuilder;
     }
 
-    public static void addBlacklist(String nickWho, String nickWhom) {
-        String sql = String.format("INSERT INTO blacklist (loginWho, loginWhom) " +
-                "VALUES ('%s', '%s')", nickWho, nickWhom);
-        try {
-            stmt.execute(sql);
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
+    public static String addBlacklist(String nickWho, String nickWhom) {
+
+        if(nickWho.equals(nickWhom)){return "Вы не можете добавить себя в черный список";}
+
+        if (!checkThatAdmin(nickWhom)) {
+            String sql = String.format("INSERT INTO blacklist (loginWho, loginWhom) " +
+                    "VALUES ('%s', '%s')", nickWho, nickWhom);
+            try {
+                stmt.execute(sql);
+                return "Пользователь добавлен в черный список.";
+            } catch (SQLException e) {
+                e.printStackTrace();
+                return "Кикие-то проблемы с базой данных";
+            }
+        }else {return "Вы не можете добавить администратора в черный список";}
     }
 
     public static boolean checkBlacklist(String nickWho, String nickWhom) {
@@ -117,7 +147,7 @@ public class AuthService {
                 Date date = new Date();
                 if (!date.after(rs.getTimestamp(1))) {
                     return true;
-                }else {
+                } else {
                     delBan(nick);
                     return false;
                 }
@@ -132,23 +162,23 @@ public class AuthService {
     //админские дела
     private static void delBan(String nick) {
 
-            try {
-                String query = String.format("DELETE FROM banlist\n" +
-                        "      WHERE nickname = '%s'", nick);
-                Statement st = connection.createStatement();
-                st.executeUpdate(query);
+        try {
+            String query = String.format("DELETE FROM banlist\n" +
+                    "      WHERE nickname = '%s'", nick);
+            Statement st = connection.createStatement();
+            st.executeUpdate(query);
 
-                System.out.println(nick + " разблокирован.");
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
+            System.out.println(nick + " разблокирован.");
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
     public static String addBan(String nickAdmin, String nickUser, long time) {
         if (checkThatAdmin(nickAdmin)) {
 
             Date date = new Date();
-            date.setTime(date.getTime() + time*60000);
+            date.setTime(date.getTime() + time * 60000);
 
             try {
                 String query = "INSERT INTO banlist (nickname, endTime) VALUES (?, ?)";
@@ -162,7 +192,9 @@ public class AuthService {
                 e.printStackTrace();
                 return "Какие-то проблемы с базой данных";
             }
-        } else {return "У вас нет прав администратора";}
+        } else {
+            return "У вас нет прав администратора";
+        }
     }
 
     public static String addUser(String nickAdmin, String login, String pass, String nick, Boolean admin) {
@@ -180,7 +212,9 @@ public class AuthService {
                 e.printStackTrace();
                 return "Какие-то проблемы с базой данных";
             }
-        } else {return "У вас нет прав администратора";}
+        } else {
+            return "У вас нет прав администратора";
+        }
     }
 
     private static boolean checkThatAdmin(String nick) {

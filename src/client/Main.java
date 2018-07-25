@@ -7,6 +7,12 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
+//Для авторизации
+// admin admin - администратор
+// login1 pass1
+// login2 pass2
+// login3 pass3
+
 public class Main extends Application {
     public static MyPlayer myMediaPlayer;
     public static Controller control;

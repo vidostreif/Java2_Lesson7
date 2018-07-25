@@ -159,8 +159,7 @@ public class ClientHandler {
         //Добавление пользователя в черный список
         String[] tokens = msg.split(" ", 2);
         if (tokens.length == 2) {
-            AuthService.addBlacklist(nick, tokens[1]);
-            sendMsg("Вы добавили пользователя " + tokens[1] + " в черный список");
+            sendMsg(AuthService.addBlacklist(nick, tokens[1]));
         } else if (tokens.length == 1) {
             sendMsg("Укажите, кого вы хотите добавить в черный список");
         }
@@ -183,10 +182,12 @@ public class ClientHandler {
         if (tokens.length == 3) {
             ClientHandler targetClient = server.getClient(tokens[1]);
             if (targetClient != null) {
-                targetClient.sendMsg("Приватное сообщение от " + nick + ": " + tokens[2]);
-                if (targetClient != this) {
-                    sendMsg(nick + " для " + targetClient.getNick() + ": " + tokens[2]);
-                }
+                if(AuthService.checkBlacklist(this.nick, targetClient.nick)) {
+                    targetClient.sendMsg("Приватное сообщение от " + nick + ": " + tokens[2]);
+                    if (targetClient != this) {
+                        sendMsg(nick + " для " + targetClient.getNick() + ": " + tokens[2]);
+                    }
+                }else {sendMsg("Вы не можете отправлять сообщения этому пользователю!");}
             } else {
                 sendMsg("Пользователя с таким ником нет в чате.");
             }
@@ -213,7 +214,7 @@ public class ClientHandler {
         //Добавление пользователя в базу
         String[] tokens = msg.split(" ", 5);
         if (tokens.length == 5) {
-            sendMsg(AuthService.addUser(nick, tokens[1], tokens[2], tokens[3], Boolean.parseBoolean(tokens[2])));
+            sendMsg(AuthService.addUser(nick, tokens[1], tokens[2], tokens[3], Boolean.parseBoolean(String.valueOf(tokens[4]))));
         } else {
             sendMsg("Пользователь добавляется в таком формате: /adduser [login] [password] [nick] [true - если администратор, false - если нет]");
         }
