@@ -14,6 +14,7 @@ public class ClientHandler {
     private DataOutputStream out;
     private DataInputStream in;
     private String nick = "";
+    private boolean connect = false;
 
     public ClientHandler(Server server, Socket socket) {
         try {
@@ -21,7 +22,7 @@ public class ClientHandler {
             this.server = server;
             this.in = new DataInputStream(socket.getInputStream());
             this.out = new DataOutputStream(socket.getOutputStream());
-
+            connect = true;
 
             new Thread(() -> {
                 String str;
@@ -62,7 +63,6 @@ public class ClientHandler {
 
                         //Отключение
                         if (str.equals("/end")) {
-                            sendMsg("/serverclosed");
                             break;
                         }
 
@@ -83,6 +83,8 @@ public class ClientHandler {
                                 slashBan(str);
                             } else if (str.startsWith("/adduser")) {
                                 slashAddUser(str);
+                            } else if (str.startsWith("/kick")) {
+                                slashKick(str);
                             } else {
                                 AuthService.saveHistory(nick, str);
                                 server.broadcastMsg(this, nick + ": " + str);
@@ -102,22 +104,26 @@ public class ClientHandler {
     }
 
     public void exitFromServer() {
-        try {
-            in.close();
-        } catch (IOException e) {
-            e.printStackTrace();
+        if (this.connect) {
+            sendMsg("/serverclosed");
+            try {
+                in.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            try {
+                out.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            try {
+                socket.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            this.connect = false;
+            server.unsubscribe(this);
         }
-        try {
-            out.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        try {
-            socket.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        server.unsubscribe(this);
     }
 
     private boolean slashAuth(String msg) {
@@ -160,6 +166,7 @@ public class ClientHandler {
             commands = "Доступные команды для администратора:" + "\n" +
                     "/list - список подключенных клиентов" + "\n" +
                     "/ban [имя] [количество минут] - бан пользователя на определенное количество времени" + "\n" +
+                    "/kick [имя] - удаляет указанного клиента с сервера" + "\n" +
                     "/adduser [login] [password] [nick] [true - если администратор, false - если нет] - добавление пользователя" + "\n" +
                     "/history - запросить историю сообщений" + "\n";
             sendMsg(commands);
@@ -240,6 +247,16 @@ public class ClientHandler {
             sendMsg(AuthService.addUser(nick, tokens[1], tokens[2], tokens[3], Boolean.parseBoolean(String.valueOf(tokens[4]))));
         } else {
             sendMsg("Пользователь добавляется в таком формате: /adduser [login] [password] [nick] [true - если администратор, false - если нет]");
+        }
+    }
+
+    private void slashKick(String msg) {
+        //Добавление пользователя в бан
+        String[] tokens = msg.split(" ");
+        if (tokens.length == 2) {
+            sendMsg(server.kickUser(nick, tokens[1]));
+        } else if (tokens.length == 1) {
+            sendMsg("Укажите, кого вы хотите добавить кикнуть");
         }
     }
 

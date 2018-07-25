@@ -25,7 +25,7 @@ public class InactivityHandler extends Thread {
                 if (finTimeLastMsg + 1000 * secondsBeforeDisconnecting < System.currentTimeMillis()) {
                     System.out.println("Client " + clientHandler.getNick() + " отключен за бездействие более " + this.secondsBeforeDisconnecting + "сек.");
                     clientHandler.sendMsg("Вы отключены за бездействие более " + this.secondsBeforeDisconnecting + "сек.");
-                    clientHandler.sendMsg("/serverclosed");
+                    clientHandler.exitFromServer();
                     break;
                 }
                 try {

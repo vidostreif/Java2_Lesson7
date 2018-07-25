@@ -3,8 +3,10 @@ package server;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.Vector;
+
 
 public class Server {
     private Vector<ClientHandler> clients;
@@ -89,6 +91,19 @@ public class Server {
             }
         }
         return null;
+    }
+
+    public String kickUser(String nickAdmin, String nickUser) {
+        if (AuthService.checkThatAdmin(nickAdmin)) {
+            ClientHandler client = this.getClient(nickUser);
+            if (client != null) {
+                client.sendMsg("Администратор удалил вас с сервера.");
+                client.exitFromServer();
+                return "Пользователь удален с сервера";
+            }else {return "Сейчас нет такого пользователя на сервере.";}
+        } else {
+            return "У вас нет прав администратора";
+        }
     }
 
     public String getAllClientsNick() {
