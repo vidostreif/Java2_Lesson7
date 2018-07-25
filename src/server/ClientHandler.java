@@ -133,8 +133,8 @@ public class ClientHandler {
             String newNick = AuthService.getNickByLoginAndPass(tokens[1], tokens[2]);
             if (newNick != null) {
                 if (!server.isNickBusy(newNick)) {
-                    sendMsg("/authok");
                     nick = newNick;
+                    sendMsg("/authok " + this.nick);
                     server.subscribe(this);
                     sendMsg("Вы можете ввести /help что бы узнать все доступные команды.");
                     return true;

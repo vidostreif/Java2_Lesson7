@@ -58,11 +58,11 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="Main.java" pinned="false" current-in-tab="false">
+      <file leaf-file-name="Main.java" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/client/Main.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="342">
-              <caret line="24" column="38" selection-start-line="24" selection-start-column="38" selection-end-line="24" selection-end-column="38" />
+            <state relative-caret-position="272">
+              <caret line="17" column="37" lean-forward="true" selection-start-line="17" selection-start-column="37" selection-end-line="17" selection-end-column="37" />
               <folding>
                 <element signature="imports" expanded="true" />
                 <element signature="e#906#907#0" expanded="true" />
@@ -75,7 +75,7 @@
       <file leaf-file-name="AuthService.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/server/AuthService.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="80">
+            <state relative-caret-position="53">
               <caret line="5" column="13" selection-start-line="5" selection-start-column="13" selection-end-line="5" selection-end-column="13" />
               <folding>
                 <element signature="imports" expanded="true" />
@@ -144,17 +144,20 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="Controller.java" pinned="false" current-in-tab="true">
+      <file leaf-file-name="Controller.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/client/Controller.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="195">
-              <caret line="64" column="44" lean-forward="true" selection-start-line="64" selection-start-column="44" selection-end-line="64" selection-end-column="44" />
+            <state relative-caret-position="304">
+              <caret line="145" column="51" selection-start-line="145" selection-start-column="45" selection-end-line="145" selection-end-column="51" />
               <folding>
                 <element signature="e#1213#1656#0" expanded="true" />
                 <element signature="e#1655#1656#0" expanded="true" />
                 <element signature="method#setAuthorized#0;class#Controller#0" />
                 <element signature="method#enterMsg#0;class#Controller#0" />
+                <element signature="e#6702#6703#0" expanded="true" />
+                <element signature="e#6733#6734#0" expanded="true" />
                 <element signature="method#tryToAuth#0;class#Controller#0" />
+                <element signature="method#getHistory#0;class#Controller#0" />
               </folding>
             </state>
           </provider>
@@ -188,14 +191,11 @@
       <file leaf-file-name="ClientHandler.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/server/ClientHandler.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="64">
-              <caret line="10" column="13" selection-start-line="10" selection-start-column="13" selection-end-line="10" selection-end-column="13" />
+            <state relative-caret-position="202">
+              <caret line="135" column="35" lean-forward="true" selection-start-line="135" selection-start-column="35" selection-end-line="135" selection-end-column="35" />
               <folding>
-                <element signature="method#ClientHandler#0;class#ClientHandler#0" />
                 <element signature="method#exitFromServer#0;class#ClientHandler#0" />
-                <element signature="method#slashAuth#0;class#ClientHandler#0" />
                 <element signature="method#slashHelp#0;class#ClientHandler#0" />
-                <element signature="method#slashBlacklist#0;class#ClientHandler#0" />
                 <element signature="method#slashDelFromBL#0;class#ClientHandler#0" />
                 <element signature="method#slashList#0;class#ClientHandler#0" />
                 <element signature="method#slashHistory#0;class#ClientHandler#0" />
@@ -239,6 +239,7 @@
       <find>serverclosed</find>
       <find>end</find>
       <find>clientList</find>
+      <find>authok</find>
     </findStrings>
     <replaceStrings>
       <replace />
@@ -268,12 +269,12 @@
         <option value="$PROJECT_DIR$/src/server/Main.java" />
         <option value="$PROJECT_DIR$/src/server/AuthService.java" />
         <option value="$PROJECT_DIR$/src/server/InactivityHandler.java" />
-        <option value="$PROJECT_DIR$/src/server/ClientHandler.java" />
         <option value="$PROJECT_DIR$/src/client/Main.java" />
         <option value="$PROJECT_DIR$/src/server/Server.java" />
         <option value="$PROJECT_DIR$/src/client/ColoredText.java" />
-        <option value="$PROJECT_DIR$/src/client/Controller.java" />
         <option value="$PROJECT_DIR$/src/client/sample.fxml" />
+        <option value="$PROJECT_DIR$/src/client/Controller.java" />
+        <option value="$PROJECT_DIR$/src/server/ClientHandler.java" />
       </list>
     </option>
   </component>
@@ -489,12 +490,12 @@
       <window_info anchor="right" id="Capture Analysis" order="4" />
       <window_info anchor="bottom" id="Event Log" order="7" sideWeight="0.50793654" side_tool="true" weight="0.24106114" />
       <window_info anchor="right" id="Maven Projects" order="3" />
-      <window_info anchor="bottom" id="Run" order="2" sideWeight="0.4920635" visible="true" weight="0.24106114" />
+      <window_info active="true" anchor="bottom" id="Run" order="2" sideWeight="0.4920635" visible="true" weight="0.24106114" />
       <window_info anchor="bottom" id="Version Control" order="7" />
       <window_info anchor="bottom" id="Terminal" order="8" />
       <window_info id="Capture Tool" order="2" />
       <window_info id="Designer" order="2" />
-      <window_info active="true" content_ui="combo" id="Project" order="0" sideWeight="0.6703755" visible="true" weight="0.12881564" />
+      <window_info content_ui="combo" id="Project" order="0" sideWeight="0.6703755" visible="true" weight="0.12881564" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
       <window_info id="UI Designer" order="2" />
@@ -558,7 +559,21 @@
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
-      <option name="time" value="59" />
+      <breakpoints>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/client/Controller.java</url>
+          <line>185</line>
+          <properties />
+          <option name="timeStamp" value="60" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/client/Controller.java</url>
+          <line>149</line>
+          <properties />
+          <option name="timeStamp" value="62" />
+        </line-breakpoint>
+      </breakpoints>
+      <option name="time" value="63" />
     </breakpoint-manager>
   </component>
   <component name="antWorkspaceConfiguration">
@@ -902,48 +917,24 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/server/AuthService.java">
+    <entry file="file://$PROJECT_DIR$/src/client/ColoredText.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="80">
-          <caret line="5" column="13" selection-start-line="5" selection-start-column="13" selection-end-line="5" selection-end-column="13" />
+        <state relative-caret-position="144">
+          <caret line="9" column="42" selection-start-line="9" selection-start-column="42" selection-end-line="9" selection-end-column="42" />
           <folding>
-            <element signature="imports" expanded="true" />
-            <element signature="method#connect#0;class#AuthService#0" />
-            <element signature="method#disconnect#0;class#AuthService#0" />
-            <element signature="method#getNickByLoginAndPass#0;class#AuthService#0" />
-            <element signature="method#saveHistory#0;class#AuthService#0" />
-            <element signature="method#getHistoryChat#0;class#AuthService#0" />
-            <element signature="method#addBlacklist#0;class#AuthService#0" />
-            <element signature="method#checkBlacklist#0;class#AuthService#0" />
-            <element signature="method#delFromBlacklist#0;class#AuthService#0" />
-            <element signature="method#checkBan#0;class#AuthService#0" />
-            <element signature="method#delBan#0;class#AuthService#0" />
-            <element signature="method#addBan#0;class#AuthService#0" />
-            <element signature="method#addUser#0;class#AuthService#0" />
-            <element signature="method#checkThatAdmin#0;class#AuthService#0" />
+            <element signature="e#252#253#0" expanded="true" />
+            <element signature="e#280#281#0" expanded="true" />
+            <element signature="e#311#312#0" expanded="true" />
+            <element signature="e#340#341#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/server/ClientHandler.java">
+    <entry file="file://$PROJECT_DIR$/src/client/sample.fxml">
+      <provider editor-type-id="JavaFX-Scene-Builder" />
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="64">
-          <caret line="10" column="13" selection-start-line="10" selection-start-column="13" selection-end-line="10" selection-end-column="13" />
-          <folding>
-            <element signature="method#ClientHandler#0;class#ClientHandler#0" />
-            <element signature="method#exitFromServer#0;class#ClientHandler#0" />
-            <element signature="method#slashAuth#0;class#ClientHandler#0" />
-            <element signature="method#slashHelp#0;class#ClientHandler#0" />
-            <element signature="method#slashBlacklist#0;class#ClientHandler#0" />
-            <element signature="method#slashDelFromBL#0;class#ClientHandler#0" />
-            <element signature="method#slashList#0;class#ClientHandler#0" />
-            <element signature="method#slashHistory#0;class#ClientHandler#0" />
-            <element signature="method#slashW#0;class#ClientHandler#0" />
-            <element signature="method#slashBan#0;class#ClientHandler#0" />
-            <element signature="method#slashAddUser#0;class#ClientHandler#0" />
-            <element signature="method#slashKick#0;class#ClientHandler#0" />
-            <element signature="method#sendMsg#0;class#ClientHandler#0" />
-          </folding>
+        <state relative-caret-position="368">
+          <caret line="64" column="81" selection-start-line="64" selection-start-column="81" selection-end-line="64" selection-end-column="81" />
         </state>
       </provider>
     </entry>
@@ -955,6 +946,23 @@
             <element signature="method#InactivityHandler#0;class#InactivityHandler#0" />
             <element signature="method#InactivityHandler#1;class#InactivityHandler#0" />
             <element signature="method#run#0;class#InactivityHandler#0" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/client/Controller.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="304">
+          <caret line="145" column="51" selection-start-line="145" selection-start-column="45" selection-end-line="145" selection-end-column="51" />
+          <folding>
+            <element signature="e#1213#1656#0" expanded="true" />
+            <element signature="e#1655#1656#0" expanded="true" />
+            <element signature="method#setAuthorized#0;class#Controller#0" />
+            <element signature="method#enterMsg#0;class#Controller#0" />
+            <element signature="e#6702#6703#0" expanded="true" />
+            <element signature="e#6733#6734#0" expanded="true" />
+            <element signature="method#tryToAuth#0;class#Controller#0" />
+            <element signature="method#getHistory#0;class#Controller#0" />
           </folding>
         </state>
       </provider>
@@ -978,6 +986,48 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/src/server/AuthService.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="53">
+          <caret line="5" column="13" selection-start-line="5" selection-start-column="13" selection-end-line="5" selection-end-column="13" />
+          <folding>
+            <element signature="imports" expanded="true" />
+            <element signature="method#connect#0;class#AuthService#0" />
+            <element signature="method#disconnect#0;class#AuthService#0" />
+            <element signature="method#getNickByLoginAndPass#0;class#AuthService#0" />
+            <element signature="method#saveHistory#0;class#AuthService#0" />
+            <element signature="method#getHistoryChat#0;class#AuthService#0" />
+            <element signature="method#addBlacklist#0;class#AuthService#0" />
+            <element signature="method#checkBlacklist#0;class#AuthService#0" />
+            <element signature="method#delFromBlacklist#0;class#AuthService#0" />
+            <element signature="method#checkBan#0;class#AuthService#0" />
+            <element signature="method#delBan#0;class#AuthService#0" />
+            <element signature="method#addBan#0;class#AuthService#0" />
+            <element signature="method#addUser#0;class#AuthService#0" />
+            <element signature="method#checkThatAdmin#0;class#AuthService#0" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/server/ClientHandler.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="202">
+          <caret line="135" column="35" lean-forward="true" selection-start-line="135" selection-start-column="35" selection-end-line="135" selection-end-column="35" />
+          <folding>
+            <element signature="method#exitFromServer#0;class#ClientHandler#0" />
+            <element signature="method#slashHelp#0;class#ClientHandler#0" />
+            <element signature="method#slashDelFromBL#0;class#ClientHandler#0" />
+            <element signature="method#slashList#0;class#ClientHandler#0" />
+            <element signature="method#slashHistory#0;class#ClientHandler#0" />
+            <element signature="method#slashW#0;class#ClientHandler#0" />
+            <element signature="method#slashBan#0;class#ClientHandler#0" />
+            <element signature="method#slashAddUser#0;class#ClientHandler#0" />
+            <element signature="method#slashKick#0;class#ClientHandler#0" />
+            <element signature="method#sendMsg#0;class#ClientHandler#0" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/src/server/Main.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="112">
@@ -988,49 +1038,14 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/client/ColoredText.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="144">
-          <caret line="9" column="42" selection-start-line="9" selection-start-column="42" selection-end-line="9" selection-end-column="42" />
-          <folding>
-            <element signature="e#252#253#0" expanded="true" />
-            <element signature="e#280#281#0" expanded="true" />
-            <element signature="e#311#312#0" expanded="true" />
-            <element signature="e#340#341#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/client/Main.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="342">
-          <caret line="24" column="38" selection-start-line="24" selection-start-column="38" selection-end-line="24" selection-end-column="38" />
+        <state relative-caret-position="272">
+          <caret line="17" column="37" lean-forward="true" selection-start-line="17" selection-start-column="37" selection-end-line="17" selection-end-column="37" />
           <folding>
             <element signature="imports" expanded="true" />
             <element signature="e#906#907#0" expanded="true" />
             <element signature="e#934#935#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/client/sample.fxml">
-      <provider editor-type-id="JavaFX-Scene-Builder" />
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="368">
-          <caret line="64" column="81" selection-start-line="64" selection-start-column="81" selection-end-line="64" selection-end-column="81" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/client/Controller.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="195">
-          <caret line="64" column="44" lean-forward="true" selection-start-line="64" selection-start-column="44" selection-end-line="64" selection-end-column="44" />
-          <folding>
-            <element signature="e#1213#1656#0" expanded="true" />
-            <element signature="e#1655#1656#0" expanded="true" />
-            <element signature="method#setAuthorized#0;class#Controller#0" />
-            <element signature="method#enterMsg#0;class#Controller#0" />
-            <element signature="method#tryToAuth#0;class#Controller#0" />
           </folding>
         </state>
       </provider>

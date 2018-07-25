@@ -53,6 +53,7 @@ public class Controller {
 
     final String IP_ADDRESS = "localhost";
     final int PORT = 16586;
+    String nickName = "NoName";
 
     private boolean isAuthorized;
 
@@ -144,13 +145,21 @@ public class Controller {
                         String str = in.readUTF();
                         if (str.startsWith("/authok")) {
                             setAuthorized(true);
+                            //Получаем наше имя
+                            String[] tokens = str.split(" ", 2);
+                            if (tokens.length == 2) {
+                                nickName = tokens[1];
+                            } else  {
+                                nickName = "NoName";
+                            }
+
 //                            chatArea.clear();
                             chatArea.getItems().clear();
                             break;
                         } else {
 //                            chatArea.appendText(str + "\n");
 //                            chatArea.getItems().add(str + "\n");
-                            chatArea.getItems().add(new ColoredText(str + "\n", Color.OLIVE));
+                            chatArea.getItems().add(new ColoredText(str, Color.RED));
 
                         }
                     }
@@ -173,14 +182,19 @@ public class Controller {
                         } else {
 //                            chatArea.appendText(str + "\n");
 //                            chatArea.getItems().add(str + "\n");
-                            chatArea.getItems().add(new ColoredText(str + "\n", Color.OLIVE));
+                            Color color;
+                            if (str.startsWith(nickName)) {
+                                color = Color.AQUA;
+                            }else {color = Color.CHOCOLATE;}
+
+                            chatArea.getItems().add(new ColoredText(str, color));
                         }
 
                     }
                 } catch (IOException e) {
                     e.printStackTrace();
 //                    chatArea.appendText("Сервер разорвал соединение!" + "\n");
-                    chatArea.getItems().add("Сервер разорвал соединение!" + "\n");
+                    chatArea.getItems().add(new ColoredText("Сервер разорвал соединение!", Color.RED));
                 } finally {
                     try {
                         socket.close();
@@ -196,7 +210,7 @@ public class Controller {
             in = null;
             out = null;
 //            chatArea.appendText("Не удалось установить соединение с сервером." + "\n");
-            chatArea.getItems().add("Не удалось установить соединение с сервером." + "\n");
+            chatArea.getItems().add(new ColoredText("Не удалось установить соединение с сервером.", Color.RED));
         }
     }
 
@@ -207,7 +221,7 @@ public class Controller {
         } catch (IOException e) {
             e.printStackTrace();
 //            chatArea.appendText("Исходящий поток не доступен!" + "\n");
-            chatArea.getItems().add("Исходящий поток не доступен!" + "\n");
+            chatArea.getItems().add(new ColoredText("Исходящий поток не доступен!", Color.RED));
             return false;
         }
     }
