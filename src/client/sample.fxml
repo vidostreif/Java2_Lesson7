@@ -7,17 +7,16 @@
 <?import javafx.scene.control.ListView?>
 <?import javafx.scene.control.PasswordField?>
 <?import javafx.scene.control.Slider?>
-<?import javafx.scene.control.TextArea?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 <?scenebuilder-stylesheet /css/Styles.css?>
 
-<VBox alignment="center" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="client.Controller">
+<VBox HBox.hgrow="ALWAYS" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="client.Controller">
     <stylesheets>
         <URL value="@/css/Styles.css" />
     </stylesheets>
-    <HBox alignment="CENTER" spacing="5.0">
+    <HBox spacing="5.0" HBox.hgrow="ALWAYS">
         <Button fx:id="btnStop" onAction="#stopMusic" text="Stop" />
         <Button fx:id="btnPause" onAction="#pauseMusic" text="Pause" />
         <Button fx:id="btnPlay" onAction="#playMusic" text="Play" />
@@ -34,39 +33,22 @@
         </VBox.margin>
     </HBox>
 
-    <HBox fx:id="upperPanel">
+    <HBox fx:id="upperPanel" HBox.hgrow="ALWAYS">
         <TextField fx:id="loginField" promptText="Логин" HBox.hgrow="ALWAYS" />
         <PasswordField fx:id="passwordField" onAction="#tryToAuth" promptText="Пароль" />
         <Button onAction="#tryToAuth" text="Авторизоваться" />
     </HBox>
 
-    <!--<HBox fx:id="bottomPanel" alignment="CENTER" managed="false" spacing="5.0" visible="false">-->
-        <!--<TextField fx:id="msgField" onAction="#enterMsg" promptText="Введите сообщение" HBox.hgrow="ALWAYS">-->
-            <!--<padding>-->
-                <!--<Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />-->
-            <!--</padding>-->
-        <!--</TextField>-->
-        <!--<Button fx:id="btn1" onAction="#enterMsg" text="Send Msg" />-->
-        <!--<opaqueInsets>-->
-            <!--<Insets />-->
-        <!--</opaqueInsets>-->
-        <!--<padding>-->
-            <!--<Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />-->
-        <!--</padding>-->
-        <!--<VBox.margin>-->
-            <!--<Insets bottom="1.0" left="1.0" right="1.0" top="1.0" />-->
-        <!--</VBox.margin>-->
-    <!--</HBox>-->
-    <HBox>
-        <VBox HBox.hgrow="ALWAYS">
+    <HBox HBox.hgrow="ALWAYS" VBox.vgrow="ALWAYS">
+        <VBox HBox.hgrow="ALWAYS" VBox.vgrow="ALWAYS">
             <!--<TextArea fx:id="chatArea2" editable="false" wrapText="true" VBox.vgrow="ALWAYS" />-->
-         <ListView fx:id="chatArea" editable="false" VBox.vgrow="ALWAYS" />
-            <HBox fx:id="bottomPanel" alignment="CENTER" managed="false" spacing="5.0" visible="false">
+            <ListView fx:id="chatArea" editable="false" HBox.hgrow="ALWAYS" VBox.vgrow="ALWAYS" />
+            <HBox fx:id="bottomPanel" managed="false" spacing="5.0" visible="false" HBox.hgrow="ALWAYS">
                 <TextField fx:id="msgField" onAction="#enterMsg" promptText="Введите сообщение..." HBox.hgrow="ALWAYS" />
                 <Button onAction="#enterMsg" text="Отправить" />
             </HBox>
         </VBox>
-        <ListView fx:id="clientList" managed="false" onMouseClicked="#selecFromList" visible="false" />
+        <ListView fx:id="clientList" managed="false" onMouseClicked="#selecFromList" visible="false" prefWidth="100.0" />
     </HBox>
 
 </VBox>

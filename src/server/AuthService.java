@@ -82,6 +82,7 @@ public class AuthService {
             sql = "SELECT id, nick, post FROM tempT ORDER BY ID;";
             ResultSet rs = stmt.executeQuery(sql);
 
+            stringBuilder.append("/history" + "\n");
             while (rs.next()) {
                 stringBuilder.append(rs.getString("nick") + " " + rs.getString("post") + "\n");
             }
@@ -197,22 +198,23 @@ public class AuthService {
 
     public static String addBan(String nickAdmin, String nickUser, long time) {
         if (checkThatAdmin(nickAdmin)) {
+            if(!checkThatAdmin(nickUser)) {
+                Date date = new Date();
+                date.setTime(date.getTime() + time * 60000);
 
-            Date date = new Date();
-            date.setTime(date.getTime() + time * 60000);
-
-            try {
-                String query = "INSERT INTO banlist (nickname, endTime) VALUES (?, ?)";
-                PreparedStatement ps = connection.prepareStatement(query);
-                ps.setString(1, nickUser);
-                ps.setTimestamp(2, new java.sql.Timestamp(date.getTime()));
-                ps.executeUpdate();
-                System.out.println("Время бана" + date.toString());
-                return "Пользователь добавлен в бан до" + date.toString();
-            } catch (SQLException e) {
-                e.printStackTrace();
-                return "Какие-то проблемы с базой данных";
-            }
+                try {
+                    String query = "INSERT INTO banlist (nickname, endTime) VALUES (?, ?)";
+                    PreparedStatement ps = connection.prepareStatement(query);
+                    ps.setString(1, nickUser);
+                    ps.setTimestamp(2, new java.sql.Timestamp(date.getTime()));
+                    ps.executeUpdate();
+                    System.out.println("Время бана" + date.toString());
+                    return "Пользователь добавлен в бан до" + date.toString();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                    return "Какие-то проблемы с базой данных";
+                }
+            } else {return "Не стоит добавлять администратора в бан :)";}
         } else {
             return "У вас нет прав администратора";
         }

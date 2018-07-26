@@ -152,14 +152,10 @@ public class Controller {
                             } else  {
                                 nickName = "NoName";
                             }
-
-//                            chatArea.clear();
                             chatArea.getItems().clear();
                             break;
                         } else {
-//                            chatArea.appendText(str + "\n");
-//                            chatArea.getItems().add(str + "\n");
-                            chatArea.getItems().add(new ColoredText(str, Color.RED));
+                            addMsgOnChatArea(str, Color.RED);
 
                         }
                     }
@@ -168,7 +164,8 @@ public class Controller {
                     while (true) {
                         String str = in.readUTF();
                         if (str.equals("/serverclosed")) break;
-                        if (str.startsWith("/clientlist")) {
+                        else if (str.startsWith("/history")) {bringOutHistory(str);}
+                        else if (str.startsWith("/clientlist")) {
                             String[] tokens = str.split(" ");
                             Platform.runLater(new Runnable() {
                                 @Override
@@ -180,20 +177,12 @@ public class Controller {
                                 }
                             });
                         } else {
-//                            chatArea.appendText(str + "\n");
-//                            chatArea.getItems().add(str + "\n");
-                            Color color;
-                            if (str.startsWith(nickName)) {
-                                color = Color.AQUA;
-                            }else {color = Color.CHOCOLATE;}
-
-                            chatArea.getItems().add(new ColoredText(str, color));
+                            chatArea.getItems().add(new ColoredText(str, getMsgColor(str)));
                         }
 
                     }
                 } catch (IOException e) {
                     e.printStackTrace();
-//                    chatArea.appendText("Сервер разорвал соединение!" + "\n");
                     chatArea.getItems().add(new ColoredText("Сервер разорвал соединение!", Color.RED));
                 } finally {
                     try {
@@ -254,5 +243,34 @@ public class Controller {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    public void bringOutHistory(String msg) {
+        String[] tokens = msg.split("\n");
+        if (tokens.length > 1) {
+            for (String token: tokens) {
+                if(token.equals("/history")){addMsgOnChatArea("История сообщений:", Color.OLIVE);}
+                else {addMsgOnChatArea(token, getMsgColor(token));}
+            }
+        } else if (tokens.length == 1) {
+            addMsgOnChatArea("История сообщений пуста.", Color.OLIVE);
+        }
+    }
+
+    public Color getMsgColor(String msg){
+        Color color;
+        if (msg.startsWith(nickName)) {
+            color = Color.DARKBLUE;
+        }else {color = Color.CHOCOLATE;}
+        return color;
+    }
+
+    public void addMsgOnChatArea(String msg, Color color) {
+        Platform.runLater(new Runnable() {
+            @Override
+            public void run() {
+                chatArea.getItems().add(new ColoredText(msg, color));
+            }
+        });
     }
 }
