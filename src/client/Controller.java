@@ -10,42 +10,27 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
-
-
-import java.util.ArrayList;
 import java.util.Timer;
 
 public class Controller {
 
-    @FXML
-    Slider volumeSlider;
+    @FXML Slider volumeSlider;
 
-    @FXML
-    Label currentTime;
+    @FXML Label currentTime;
 
-    @FXML
-    TextField msgField;
+    @FXML TextField msgField;
 
-//    @FXML
-//    TextArea chatArea;
+    @FXML ListView chatArea;
 
-    @FXML
-    ListView chatArea;
+    @FXML HBox bottomPanel;
 
-    @FXML
-    HBox bottomPanel;
+    @FXML HBox upperPanel;
 
-    @FXML
-    HBox upperPanel;
+    @FXML TextField loginField;
 
-    @FXML
-    TextField loginField;
+    @FXML PasswordField passwordField;
 
-    @FXML
-    PasswordField passwordField;
-
-    @FXML
-    ListView clientList;
+    @FXML ListView clientList;
 
     Socket socket;
     DataInputStream in;
@@ -113,7 +98,7 @@ public class Controller {
         }
     }
 
-    public void setAuthorized(boolean isAuthorized) {
+    private void setAuthorized(boolean isAuthorized) {
         this.isAuthorized = isAuthorized;
         if(!isAuthorized) {
             upperPanel.setVisible(true);
@@ -132,7 +117,7 @@ public class Controller {
         }
     }
 
-    public void connect() {
+    private void connect() {
         try {
             setAuthorized(false);
             socket = new Socket(IP_ADDRESS, PORT);
@@ -177,13 +162,13 @@ public class Controller {
                                 }
                             });
                         } else {
-                            chatArea.getItems().add(new ColoredText(str, getMsgColor(str)));
+                            addMsgOnChatArea(str, getMsgColor(str));
                         }
 
                     }
                 } catch (IOException e) {
                     e.printStackTrace();
-                    chatArea.getItems().add(new ColoredText("Сервер разорвал соединение!", Color.RED));
+                    addMsgOnChatArea("Сервер разорвал соединение!", Color.RED);
                 } finally {
                     try {
                         socket.close();
@@ -198,19 +183,17 @@ public class Controller {
             socket = null;
             in = null;
             out = null;
-//            chatArea.appendText("Не удалось установить соединение с сервером." + "\n");
-            chatArea.getItems().add(new ColoredText("Не удалось установить соединение с сервером.", Color.RED));
+            addMsgOnChatArea("Не удалось установить соединение с сервером.", Color.RED);
         }
     }
 
-    public boolean sendMsg(String msg) {
+    private boolean sendMsg(String msg) {
         try {
             out.writeUTF(msg);
             return true;
         } catch (IOException e) {
             e.printStackTrace();
-//            chatArea.appendText("Исходящий поток не доступен!" + "\n");
-            chatArea.getItems().add(new ColoredText("Исходящий поток не доступен!", Color.RED));
+            addMsgOnChatArea("Исходящий поток не доступен!", Color.RED);
             return false;
         }
     }
@@ -230,14 +213,13 @@ public class Controller {
         if (socket == null || socket.isClosed()) {
             connect();
         }
-
         if (sendMsg("/auth " + loginField.getText() + " " + passwordField.getText())) {
             loginField.clear();
             passwordField.clear();
         }
     }
 
-    public void getHistory() {
+    private void getHistory() {
         try {
             out.writeUTF("/history ");
         } catch (IOException e) {
@@ -245,7 +227,7 @@ public class Controller {
         }
     }
 
-    public void bringOutHistory(String msg) {
+    private void bringOutHistory(String msg) {
         String[] tokens = msg.split("\n");
         if (tokens.length > 1) {
             for (String token: tokens) {
@@ -257,7 +239,7 @@ public class Controller {
         }
     }
 
-    public Color getMsgColor(String msg){
+    private Color getMsgColor(String msg){
         Color color;
         if (msg.startsWith(nickName)) {
             color = Color.DARKBLUE;
@@ -265,11 +247,12 @@ public class Controller {
         return color;
     }
 
-    public void addMsgOnChatArea(String msg, Color color) {
+    private void addMsgOnChatArea(String msg, Color color) {
         Platform.runLater(new Runnable() {
             @Override
             public void run() {
                 chatArea.getItems().add(new ColoredText(msg, color));
+                chatArea.scrollTo(chatArea.getItems().size());
             }
         });
     }

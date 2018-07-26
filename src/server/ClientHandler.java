@@ -42,7 +42,7 @@ public class ClientHandler {
                     if (str.startsWith("/auth")) {
                         if (slashAuth(str)) {
                             authorized = true;
-                            inactivityHandler.finTimeLastMsg = System.currentTimeMillis();
+                            inactivityHandler.setFinTimeLastMsg(System.currentTimeMillis());
                             inactivityHandler.start();
                             break;
                         }
@@ -58,7 +58,7 @@ public class ClientHandler {
                             break;
                         }
 
-                        inactivityHandler.finTimeLastMsg = System.currentTimeMillis();
+                        inactivityHandler.setFinTimeLastMsg(System.currentTimeMillis());
                         System.out.println("Client " + nick + " пишет: " + str);
 
                         //Отключение

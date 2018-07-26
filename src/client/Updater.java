@@ -1,14 +1,13 @@
 package client;
 
 import javafx.application.Platform;
-
 import java.util.TimerTask;
 
 public class Updater extends TimerTask {
 
     private Controller contr;
 
-    Updater(Controller contr){
+    public Updater(Controller contr){
         this.contr = contr;
     }
 

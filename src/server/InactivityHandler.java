@@ -3,7 +3,7 @@ package server;
 
 public class InactivityHandler extends Thread {
     private ClientHandler clientHandler;
-    public long finTimeLastMsg;
+    private long finTimeLastMsg;
     private int secondsBeforeDisconnecting;
     private boolean destroy = false;
 
@@ -39,5 +39,13 @@ public class InactivityHandler extends Thread {
 
     public void setDestroy(boolean destroy) {
         this.destroy = destroy;
+    }
+
+    public long getFinTimeLastMsg() {
+        return finTimeLastMsg;
+    }
+
+    public void setFinTimeLastMsg(long finTimeLastMsg) {
+        this.finTimeLastMsg = finTimeLastMsg;
     }
 }
